@@ -34,7 +34,7 @@
     "express": "^4.17.2",
     "medusa-plugin-slack-notification": "^1.3.9"
   },
-  "repository": "https://github.com/medusajs/medusa-starter-default.git",
+  "repository": "https://github.com/abdelrhmankouta/omniful-medusa.git",
   "keywords": [
     "sqlite",
     "ecommerce",
