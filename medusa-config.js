@@ -100,10 +100,10 @@ const projectConfig = {
   database_type: DATABASE_TYPE,
   store_cors: STORE_CORS,
   admin_cors: ADMIN_CORS,
-  // database_extra:
-  //   process.env.NODE_ENV !== "development"
-  //     ? { ssl: { rejectUnauthorized: false } }
-  //     : {},
+  database_extra:
+    process.env.NODE_ENV !== "development"
+      ? { ssl: { rejectUnauthorized: false } }
+      : {},
 };
 
 if (DATABASE_URL && DATABASE_TYPE === "postgres") {
