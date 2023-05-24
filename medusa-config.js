@@ -29,58 +29,92 @@ const ADMIN_CORS =
 const STORE_CORS = process.env.STORE_CORS || "http://localhost:8000";
 
 const DATABASE_TYPE = process.env.DATABASE_TYPE || "sqlite";
-const DATABASE_URL = process.env.DATABASE_URL || "postgres://localhost/medusa-store";
+const DATABASE_URL =
+  process.env.DATABASE_URL || "postgres://localhost/medusa-store";
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 
 const plugins = [
   `medusa-fulfillment-manual`,
   `medusa-payment-manual`,
-  // To enable the admin plugin, uncomment the following lines and run `yarn add @medusajs/admin`
+  {
+    resolve: "@medusajs/admin",
+    options: {
+      path: "backend",
+      autoRebuild: true,
+      // outDirCopied: "admin-build",
+    },
+  },
   // {
-  //   resolve: "@medusajs/admin",
-  //   /** @type {import('@medusajs/admin').PluginOptions} */
+  //   resolve: `medusa-file-minio`,
   //   options: {
-  //     autoRebuild: true,
+  //     endpoint: process.env.MINIO_ENDPOINT,
+  //     bucket: process.env.MINIO_BUCKET,
+  //     access_key_id: process.env.MINIO_ACCESS_KEY,
+  //     secret_access_key: process.env.MINIO_SECRET_KEY,
   //   },
   // },
+  {
+    resolve: `medusa-plugin-slack-notification`,
+    options: {
+      show_discount_code: true,
+      slack_url: `https://hooks.slack.com/services/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`,
+      admin_orders_url: `http://localhost:7001/a/orders`,
+    },
+  },
+  {
+    resolve: `medusa-payment-stripe`,
+    options: {
+      api_key: process.env.STRIPE_API_KEY,
+      webhook_secret: process.env.STRIPE_WEBHOOK_SECRET,
+    },
+  },
 ];
 
 const modules = {
-  /*eventBus: {
+  eventBus: {
     resolve: "@medusajs/event-bus-redis",
     options: {
-      redisUrl: REDIS_URL
-    }
+      redisUrl: REDIS_URL,
+    },
   },
   cacheService: {
     resolve: "@medusajs/cache-redis",
     options: {
-      redisUrl: REDIS_URL
-    }
-  },*/
-}
+      redisUrl: REDIS_URL,
+    },
+  },
+  inventoryService: {
+    resolve: "@medusajs/inventory",
+  },
+  stockLocationService: {
+    resolve: "@medusajs/stock-location",
+  },
+};
 
-/** @type {import('@medusajs/medusa').ConfigModule["projectConfig"]} */
 const projectConfig = {
+  database_database: "./medusa-db.sql",
   jwtSecret: process.env.JWT_SECRET,
   cookieSecret: process.env.COOKIE_SECRET,
-  database_database: "./medusa-db.sql",
+  redis_url: REDIS_URL,
+  database_url: DATABASE_URL,
   database_type: DATABASE_TYPE,
   store_cors: STORE_CORS,
   admin_cors: ADMIN_CORS,
-  // Uncomment the following lines to enable REDIS
-  // redis_url: REDIS_URL
-}
+  // database_extra:
+  //   process.env.NODE_ENV !== "development"
+  //     ? { ssl: { rejectUnauthorized: false } }
+  //     : {},
+};
 
 if (DATABASE_URL && DATABASE_TYPE === "postgres") {
-  projectConfig.database_url = DATABASE_URL;
   delete projectConfig["database_database"];
 }
 
-
-/** @type {import('@medusajs/medusa').ConfigModule} */
 module.exports = {
   projectConfig,
   plugins,
-	modules,
+  modules,
+  featureFlags: {
+    product_categories: true,
+  },
 };
