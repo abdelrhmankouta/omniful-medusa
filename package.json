@@ -20,7 +20,6 @@
     "medusa-payment-stripe": "^1.1.38",
     "mongoose": "^5.13.3",
     "typeorm": "^0.2.36",
-    "@babel/preset-typescript": "^7.21.4",
     "@medusajs/admin": "^5.0.0",
     "@medusajs/cache-inmemory": "^1.8.6",
     "@medusajs/cache-redis": "^1.8.6",
