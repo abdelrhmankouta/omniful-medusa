@@ -21,7 +21,7 @@
     "dev": "cross-env npm run build && medusa develop",
     "build:admin": "cross-env medusa-admin build",
     "serve": "medusa start",
-    "start": "medusa develop",
+    "start": "cross-env npm run build && medusa start",
     "heroku-postbuild": "medusa migrations run",
     "prepare": "npm run build",
     "build": "babel src -d dist --extensions \".ts,.js\""
