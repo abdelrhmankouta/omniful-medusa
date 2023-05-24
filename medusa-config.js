@@ -79,7 +79,7 @@ const modules = {
 };
 
 const projectConfig = {
-  database_database: "./medusa-db.sql",
+  // database_database: "./medusa-db.sql",
   jwtSecret: process.env.JWT_SECRET,
   cookieSecret: process.env.COOKIE_SECRET,
   redis_url: REDIS_URL,
